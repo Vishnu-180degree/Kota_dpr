@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style type="text/css">
+            body{
+                font-size: 16px;
+                background: #f9f9f9;
+            }
+
+             h2{
+                border-bottom: 2px solid green;
+             } 
+
+            form{
+                width: 300px;
+                background: #ffffff;
+                padding: 15px 40px 40px;
+                margin: 50px auto 0;
+                border: 2px solid #999fa0;
+                border-radius: 5px;
+            }
+
+            input, select{
+                border: 1px solid #8b8b8b;
+                padding: 10px;
+                width: 100%;
+                box-sizing: border-box;
+                border-radius: 2px;          
+            }
+
+            label{
+                display: block;
+                margin-bottom: 6px;
+            }
+
+            div{
+                padding-bottom: 12px;
+            }
+
+            input[type="submit"]{
+                font-size: 18px;
+                background: #4cbb17;
+                border-color: black;
+                box-shadow: 0 3px 0 grey;
+                color: white;
+                cursor: pointer;
+            }
+
+            input[type="submit"]:hover{
+                background: #228b22;
+            }
+
+            input[type="reset"]{
+                font-size: 15px;
+                background: #d80f0f;
+                border-color: black;
+                box-shadow: 0 3px 0 grey;
+                color: white;
+                cursor: pointer;
+            }
+
+            input[type="reset"]:hover{
+                background: #f70303;
+            }
+
+           .logo-title-container{
+            display: flex;
+            align-items: center;
+           }
+
+           .logo-title-container img{
+            height: 50px;
+            width: 55px;
+            margin-right: 10px;
+            border-radius: 5%;
+            
+           }
+    </style>
+</head>
+
+
+
+
+<body>
+
+    <form id="form" method="POST">
+        <div class="logo-title-container">
+            <img src="logo.png" alt="Logo">
+            <h2>DPR UPDATE FORM</h2>
+        </div>
+        
+        <!-- New Dropdown for Sheet Selection -->                
+        <div class="field">
+            <h3>Please Select Your Station
+            <select name="myselect" id="myselect">
+                <option value="">Select</option>
+                <option value="Bala Ji">Bala Ji Filling Samraniya</option>
+                <option value="Guru Mandana">Guru Mandana</option>
+                <option value="Kaushalam & Sons">Kaushalam & Sons</option>
+                <option value="Raj Ramganj Mandi">Raj Ramganj Mandi</option>
+                <option value="RD Fuel Anta">RD Fuel Anta</option>
+                <option value="R.R. Fuel">R.R. Fuel Rawatbhata</option>
+                <option value="Vikas Agro">Vikas Agro</option>
+            </select></h3>
+        </div>
+            
+        <!-- Existing form fields -->
+        <div class="field">
+            <label class="label">Date
+            <input class="input" type="date" placeholder="Date" name="Date" />
+        </label>
+        </div>
+        <div class="field">
+            <label class="label">HMR Closing    
+            <input class="input" type="text" placeholder="00:00:00" name="HMR Closing" oninput="validateInput(this)" />
+        </label>
+        </div>
+        <div class="field">
+            <label class="label">Suction Closing
+            <input class="input" type="text" placeholder="Suction Closing" name="Suction Closing" oninput="validateInput(this)" />
+        </label>
+        </div>
+        <div class="field">
+            <label class="label">Discharge Closing
+                <input class="input" type="text" placeholder="Discharge Closing" name="Discharge Closing" oninput="validateInput(this)" />
+            </label>
+                
+        </div>
+        <div class="field">
+            <label class="label">Total Sale
+            <input class="input" type="text" placeholder="Total Sale" name="Total Sale" oninput="validateInput(this)" />
+        </label>
+        </div>
+        
+     
+        <div>
+            <input type="submit" id="submit" value="Submit">
+        </div>
+        <div>
+            <input type="reset" id="reset" value="Reset">
+        </div>
+       
+        <div id="message" style="display: none; margin: 20px; 
+            font-weight: bold; color: green; padding: 8px; 
+            background-color: beige; border-radius: 4px; 
+            border-color: aquamarine;">
+        </div>
+</form>
+
+
+
+<script>
+
+function validateInput(input) {
+    let value = input.value;
+
+    // Remove any invalid characters
+    let validValue = value.replace(/[^0-9:.]/g, '');
+
+    // Count occurrences of colons and decimal points
+    const colonCount = (validValue.match(/:/g) || []).length;
+    const decimalCount = (validValue.match(/\./g) || []).length;
+
+    // If there is a decimal point, remove all colons
+    // if (decimalCount > 0) {
+    //     validValue = validValue.replace(/:/g, '');
+    // }
+
+    // If there are more than two colons, keep only the first two
+    if (colonCount > 2) {
+        let parts = validValue.split(":");
+        validValue = parts.slice(0, 3).join(":"); // Keep only the first two colons
+    }
+
+    // If there is more than one decimal point, keep only the first one
+    if (decimalCount > 1) {
+        let decimalParts = validValue.split(".");
+        validValue = decimalParts[0] + "." + decimalParts.slice(1).join(""); // Only keep the first decimal
+    }
+
+    // Update the input field value with the corrected string
+    input.value = validValue;
+}
+
+
+
+
+
+
+
+     document.getElementById("form").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  // Get the dropdown and other form data
+  var selectElement = document.getElementById("myselect");
+  var formData = new FormData(this);
+  var keyValuePairs = [];
+  var isValid = true; // Flag to track validity
+  
+  // Validate the dropdown
+  if (selectElement.value === "") {  // The default option's value is empty
+    isValid = false;
+    alert("Please select a station!"); // Alert if no station is selected
+    return; // Stop the form submission process
+  }
+
+  // Validate other fields (if necessary)
+  for (var pair of formData.entries()) {
+    if (!pair[1]) {  // Check if any field is empty
+      isValid = false;
+      alert(pair[0] + " field is required!"); // Show alert for the missing field
+      break; // Exit the loop if a field is invalid
+    }
+    keyValuePairs.push(pair[0] + "=" + pair[1]);
+  }
+
+  // If everything is valid
+  if (isValid) {
+    document.getElementById("message").textContent = "Submitting..";
+    document.getElementById("message").style.display = "block";
+    document.getElementById("submit").disabled = true;
+
+    var formDataString = keyValuePairs.join("&");
+
+    // Replace with your Google Apps Script URL
+    fetch("https://script.google.com/macros/s/AKfycbzsZd7-Hq2RYVxpGCyvLAESgKCTxpZUoMw6d_DxeXlOKtzgWjOI-cFvAL1mcern6MaDwA/exec", {
+      
+        redirect: "follow",
+            method: "POST",
+            headers: {
+              "Content-Type": "text/plain;charset=utf-8",
+      },
+      body: formDataString,
+    })
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById("message").textContent = "Form submitted successfully!";
+    })
+    .catch(error => {
+      document.getElementById("message").textContent = "There was an error submitting the form.";
+      document.getElementById("submit-button").disabled = false;
+    });
+  }
+});
+
+</script>
+</body>
+</html>
